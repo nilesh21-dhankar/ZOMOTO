@@ -1,12 +1,17 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { errorMiddleware } from "./middlewares/error.js";
 import reservationRouter from "./routes/reservationRoute.js";
-import { dbConnection } from "./database/dbConnection.js";
+import { dbConnection }  from "./database/dbConnection.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: join(__dirname, 'config', 'config.env') });
 
 app.use(
   cors({
@@ -24,11 +29,6 @@ app.get("/", (req, res, next)=>{return res.status(200).json({
   message: "HELLO WORLD AGAIN"
 })})
 
-dbConnection();
-
 app.use(errorMiddleware);
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-})
 
 export default app;
